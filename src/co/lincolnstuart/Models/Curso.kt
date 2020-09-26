@@ -16,7 +16,7 @@ class Curso(val codigo: Int,
     }
 
     fun adicionaUmAluno(umAluno: Aluno){
-        if(quantidadeMaximaDeAlunos < matriculados.size)
+        if(quantidadeMaximaDeAlunos > matriculados.size)
             matriculados.add(umAluno)
         else
             throw CursoComLotacaoMaximaException()
@@ -30,6 +30,10 @@ class Curso(val codigo: Int,
         return matriculados.filter {
             it == umAluno
         }.any()
+    }
+
+    fun getMatriculados(): List<Aluno>{
+        return matriculados.toList()
     }
 
     override fun equals(other: Any?): Boolean {

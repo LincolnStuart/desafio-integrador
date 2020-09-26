@@ -145,6 +145,7 @@ class DigitalHouseManager {
             println(it)
             println(it.titular)
             println(it.adjunto)
+            println(it.getMatriculados())
         }
     }
 

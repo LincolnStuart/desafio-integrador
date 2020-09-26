@@ -23,5 +23,11 @@ fun main() {
     }
     manager.alocarProfessores(1, 1, 4)
     manager.alocarProfessores(2, 2, 3)
+    //Todo mensagem
+    manager.excluirCurso(2)
+    manager.excluirCurso(3)
+    manager.excluirCurso(4)
+    manager.matricularAluno(1,1)
+    manager.matricularAluno(2,1)
     manager.imprimeResumoCursos()
 }
