@@ -1,4 +1,4 @@
-package co.lincolnstuart.Interfaces
+package co.lincolnstuart.Models
 
 interface Pessoa {
     val nome: String

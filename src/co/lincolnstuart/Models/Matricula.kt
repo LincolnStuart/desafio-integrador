@@ -3,8 +3,10 @@ package co.lincolnstuart.Models
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class Matricula(val aluno: Aluno,
-                val curso: Curso) {
+class Matricula(
+    val aluno: Aluno,
+    val curso: Curso
+) {
 
     val data: LocalDateTime = LocalDateTime.now()
 

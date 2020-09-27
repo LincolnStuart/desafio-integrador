@@ -4,15 +4,15 @@ import co.lincolnstuart.Models.*
 
 
 val mockProfessoresTitulares = listOf(
-    ProfessorTitular(Professor.getCodigoDisponivel(),"Cesar", "Nascimento", "Android/Kotlin"),
-    ProfessorTitular(Professor.getCodigoDisponivel(),"Ricardo", "Lecheta", "Flutter"),
-    ProfessorTitular(Professor.getCodigoDisponivel(),"Eduardo", "Pires", "DotNet"),
-    ProfessorTitular(2,"Lebron", "James", "3 pontos")
+    ProfessorTitular(Professor.getCodigoDisponivel(), "Cesar", "Nascimento", "Android/Kotlin"),
+    ProfessorTitular(Professor.getCodigoDisponivel(), "Ricardo", "Lecheta", "Flutter"),
+    ProfessorTitular(Professor.getCodigoDisponivel(), "Eduardo", "Pires", "DotNet"),
+    ProfessorTitular(2, "Lebron", "James", "3 pontos")
 )
 val mockProfessoresAdjuntos = listOf(
-    ProfessorAdjunto(Professor.getCodigoDisponivel(),"Eduardo", "Misina", 50),
-    ProfessorAdjunto(Professor.getCodigoDisponivel(),"Steve", "Wozniak", 5),
-    ProfessorAdjunto(Professor.getCodigoDisponivel(),"Sancho", "Pança", -100)
+    ProfessorAdjunto(Professor.getCodigoDisponivel(), "Eduardo", "Misina", 50),
+    ProfessorAdjunto(Professor.getCodigoDisponivel(), "Steve", "Wozniak", 5),
+    ProfessorAdjunto(Professor.getCodigoDisponivel(), "Sancho", "Pança", -100)
 )
 val mockCursos = listOf(
     Curso(Curso.getCodigoDisponivel(), "Android", 1),
