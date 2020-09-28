@@ -27,14 +27,26 @@ class Curso(
         matriculados.remove(umAluno)
     }
 
-    fun alunoPertenceAoCurso(umAluno: Aluno): Boolean {
+    fun verificarAlunoPertenceAoCurso(umAluno: Aluno): Boolean {
         return matriculados.filter {
             it == umAluno
         }.any()
     }
 
-    fun getMatriculados(): List<Aluno> {
+    fun recuperarMatriculados(): List<Aluno> {
         return matriculados.toList()
+    }
+
+    fun verificarProfessorAlocadoAoCurso(codigoProfessor: Int): Boolean{
+        titular?.let {
+            if(it.codigo == codigoProfessor)
+                return true
+        }
+        adjunto?.let {
+            if(it.codigo == codigoProfessor)
+                return true
+        }
+        return false
     }
 
     override fun equals(other: Any?): Boolean {

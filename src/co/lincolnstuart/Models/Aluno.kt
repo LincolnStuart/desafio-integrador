@@ -4,7 +4,7 @@ class Aluno(
     val codigo: Int,
     override val nome: String,
     override val sobrenome: String
-) : Pessoa {
+) : IPessoa {
 
     companion object GeradorDeCodigoUnico {
         private var _codigoDisponivel = 1

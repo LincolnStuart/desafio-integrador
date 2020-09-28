@@ -1,6 +1,6 @@
 package co.lincolnstuart.Models
 
-interface Pessoa {
+interface IPessoa {
     val nome: String
     val sobrenome: String
 }

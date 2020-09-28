@@ -4,7 +4,7 @@ abstract class Professor(
     override val nome: String,
     override val sobrenome: String,
     var tempoDeCasa: Int
-) : Pessoa {
+) : IPessoa {
 
     abstract val codigo: Int
 

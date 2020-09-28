@@ -26,6 +26,10 @@ class DigitalHouseManager {
         cursos.filter {
             it.codigo == codigoCurso
         }.firstOrNull()?.let { cursoASerRemovido ->
+            if(cursoASerRemovido.recuperarMatriculados().any()){
+                println("Curso $codigoCurso não pode ser removido: existem alunos matriculados neste curso!")
+                return
+            }
             cursos.remove(cursoASerRemovido)
             println("Curso removido com sucesso!")
             return
@@ -44,7 +48,7 @@ class DigitalHouseManager {
             return
         }
         val adjunto = ProfessorAdjunto(codigoProfessor, nome, sobrenome, quantidadeDeHoras)
-        cadastraProfessor(adjunto)
+        cadastraProfessorGenerico(adjunto)
     }
 
     fun registrarProfessorTitular(
@@ -54,22 +58,19 @@ class DigitalHouseManager {
         especialidade: String
     ) {
         val titular = ProfessorTitular(codigoProfessor, nome, sobrenome, especialidade)
-        cadastraProfessor(titular)
-    }
-
-    private fun cadastraProfessor(professor: Professor) {
-        if (professores.contains(professor)) {
-            println("Professor ${professor.codigo} não cadastrado: Código já cadastrado anteriormente.")
-            return
-        }
-        professores.add(professor)
-        println("Professor ${professor.codigo} cadastrado com sucesso!")
+        cadastraProfessorGenerico(titular)
     }
 
     fun excluirProfessor(codigoProfessor: Int) {
         professores.filter {
             it.codigo == codigoProfessor
         }.firstOrNull()?.let { professorASerRemovido ->
+            cursos.forEach {
+                if(it.verificarProfessorAlocadoAoCurso(codigoProfessor)){
+                    println("Professor não removido: Professor $codigoProfessor está alocado ao curso ${it.codigo}!")
+                    return
+                }
+            }
             professores.remove(professorASerRemovido)
             println("Professor removido com sucesso!")
             return
@@ -93,8 +94,8 @@ class DigitalHouseManager {
 
     fun matricularAluno(codigoAluno: Int, codigoCurso: Int) {
         try {
-            val aluno = getAluno(codigoAluno)
-            val curso = getCurso(codigoCurso)
+            val aluno = recuperarAluno(codigoAluno)
+            val curso = recuperarCurso(codigoCurso)
             if (verificarAlunoMatriculadoNoCurso(curso, aluno)) return
             if (curso.adicionarUmAluno(aluno)) {
                 println("Não foi possível realizar a matricula pois o curso não tem mais vagas :/")
@@ -114,9 +115,9 @@ class DigitalHouseManager {
         codigoProfessorAdjunto: Int
     ) {
         try {
-            val curso = getCurso(codigoCurso)
-            val titular = getProfessorTitular(codigoProfessorTitular)
-            val adjunto = getProfessorAdjunto(codigoProfessorAdjunto)
+            val curso = recuperarCurso(codigoCurso)
+            val titular = recuperarProfessorTitular(codigoProfessorTitular)
+            val adjunto = recuperarProfessorAdjunto(codigoProfessorAdjunto)
             //só inclui se forem encontrados tanto adjunto quanto titular
             curso.titular = titular
             curso.adjunto = adjunto
@@ -126,11 +127,20 @@ class DigitalHouseManager {
         }
     }
 
+    private fun cadastraProfessorGenerico(professor: Professor) {
+        if (professores.contains(professor)) {
+            println("Professor ${professor.codigo} não cadastrado: Código já cadastrado anteriormente.")
+            return
+        }
+        professores.add(professor)
+        println("Professor ${professor.codigo} cadastrado com sucesso!")
+    }
+
     private fun verificarAlunoMatriculadoNoCurso(
         curso: Curso,
         aluno: Aluno
     ): Boolean {
-        if (curso.alunoPertenceAoCurso(aluno)) {
+        if (curso.verificarAlunoPertenceAoCurso(aluno)) {
             println("O aluno ${aluno.codigo} já está matriculado no ${curso.codigo}")
             return true
         }
@@ -139,29 +149,50 @@ class DigitalHouseManager {
 
     fun desvincularAlunoDoCurso(codigoAluno: Int, codigoCurso: Int) {
         try {
-            val aluno = getAluno(codigoAluno)
-            val curso = getCurso(codigoCurso)
+            val aluno = recuperarAluno(codigoAluno)
+            val curso = recuperarCurso(codigoCurso)
             curso.excluirUmAluno(aluno)
-            matriculas.remove(getMatricula(aluno, curso))
+            matriculas.remove(recuperarMatricula(aluno, curso))
             println("Matrícula removida com sucesso!")
         } catch (exception: DadoNaoEncontradoException) {
             println(exception.message)
         }
     }
 
-    private fun getCurso(codigoCurso: Int): Curso {
+    fun desvincularProfessorDoCurso(codigoProfessor: Int, codigoCurso: Int) {
+        try {
+            val curso = recuperarCurso(codigoCurso)
+            when {
+                curso.titular?.codigo == codigoProfessor -> {
+                    curso.titular = null
+                    println("Professor titular $codigoProfessor desvinculado do curso $codigoCurso com sucesso")
+                }
+                curso.adjunto?.codigo == codigoCurso -> {
+                    curso.adjunto = null
+                    println("Professor titular $codigoProfessor desvinculado do curso $codigoCurso com sucesso")
+                }
+                else -> {
+                    println("Professor não desvinculado: Código do professor $codigoProfessor não encontrado no curso $codigoCurso")
+                }
+            }
+        } catch (exception: DadoNaoEncontradoException) {
+            println(exception.message)
+        }
+    }
+
+    private fun recuperarCurso(codigoCurso: Int): Curso {
         return cursos.filter {
             it.codigo == codigoCurso
         }.firstOrNull() ?: throw DadoNaoEncontradoException("Código do curso não encontrado :/")
     }
 
-    private fun getAluno(codigoAluno: Int): Aluno {
+    private fun recuperarAluno(codigoAluno: Int): Aluno {
         return alunos.filter {
             it.codigo == codigoAluno
         }.firstOrNull() ?: throw DadoNaoEncontradoException("Código do aluno não encontrado :/")
     }
 
-    private fun getMatricula(
+    private fun recuperarMatricula(
         aluno: Aluno,
         curso: Curso
     ): Matricula {
@@ -171,7 +202,7 @@ class DigitalHouseManager {
             ?: throw DadoNaoEncontradoException("Matrícula não encontrada :/"))
     }
 
-    private fun getProfessorTitular(codigoProfessor: Int): ProfessorTitular {
+    private fun recuperarProfessorTitular(codigoProfessor: Int): ProfessorTitular {
         return professores.filter {
             it.codigo == codigoProfessor && it is ProfessorTitular
         }.firstOrNull()?.let { titular ->
@@ -179,7 +210,7 @@ class DigitalHouseManager {
         } ?: throw DadoNaoEncontradoException("Código do titular não encontrado :/")
     }
 
-    private fun getProfessorAdjunto(codigoProfessor: Int): ProfessorAdjunto {
+    private fun recuperarProfessorAdjunto(codigoProfessor: Int): ProfessorAdjunto {
         return professores.filter {
             it.codigo == codigoProfessor && it is ProfessorAdjunto
         }.firstOrNull()?.let { adjunto ->
@@ -202,7 +233,7 @@ class DigitalHouseManager {
             println(it)
             println(it.titular)
             println(it.adjunto)
-            println(it.getMatriculados())
+            println(it.recuperarMatriculados())
             println("-----------------------------------------")
         }
         println("#########################################")
