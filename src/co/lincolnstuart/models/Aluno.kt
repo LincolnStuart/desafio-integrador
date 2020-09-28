@@ -1,14 +1,26 @@
-package co.lincolnstuart.Models
+package co.lincolnstuart.models
 
+/**
+ * classe que representa um aluno que implementa uma pessoa.
+ *
+ * @author Lincoln Stuart
+ * @since 25/09/2020
+ */
 class Aluno(
     val codigo: Int,
     override val nome: String,
     override val sobrenome: String
 ) : IPessoa {
 
+    /**
+     * singleton para simular um identity.
+     *
+     * @author Lincoln Stuart
+     * @since 25/09/2020
+     */
     companion object GeradorDeCodigoUnico {
-        private var _codigoDisponivel = 1
-        fun getCodigoDisponivel() = _codigoDisponivel++
+        private var codigoDisponivel = 1
+        fun getCodigoDisponivel() = codigoDisponivel++
     }
 
     override fun equals(other: Any?): Boolean {

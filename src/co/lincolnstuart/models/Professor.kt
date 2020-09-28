@@ -1,5 +1,11 @@
-package co.lincolnstuart.Models
+package co.lincolnstuart.models
 
+/**
+ * classe abstrata que representa uma generalização de professor.
+ *
+ * @author Lincoln Stuart
+ * @since 25/09/2020
+ */
 abstract class Professor(
     override val nome: String,
     override val sobrenome: String,
@@ -8,9 +14,15 @@ abstract class Professor(
 
     abstract val codigo: Int
 
+    /**
+     * singleton para simular um identity
+     *
+     * @author Lincoln Stuart
+     * @since 25/09/2020
+     */
     companion object GeradorDeCodigoUnico {
-        private var _codigoDisponivel = 1
-        fun getCodigoDisponivel() = _codigoDisponivel++
+        private var codigoDisponivel = 1
+        fun getCodigoDisponivel() = codigoDisponivel++
     }
 
     override fun equals(other: Any?): Boolean {

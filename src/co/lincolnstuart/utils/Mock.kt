@@ -1,6 +1,6 @@
-package co.lincolnstuart.Utils
+package co.lincolnstuart.utils
 
-import co.lincolnstuart.Models.*
+import co.lincolnstuart.models.*
 
 
 val mockProfessoresTitulares = listOf(

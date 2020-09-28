@@ -1,5 +1,11 @@
-package co.lincolnstuart.Models
+package co.lincolnstuart.models
 
+/**
+ * classe que representa um professor adjunto, herdando do professor
+ *
+ * @author Lincoln Stuart
+ * @since 25/09/2020
+ */
 class ProfessorAdjunto(
     override val codigo: Int,
     nome: String,

@@ -1,14 +1,20 @@
-package co.lincolnstuart.Models
+package co.lincolnstuart.models
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+/**
+ * classe que representa uma matricula de um aluno em um curso.
+ *
+ * @author Lincoln Stuart
+ * @since 25/09/2020
+ */
 class Matricula(
     val aluno: Aluno,
     val curso: Curso
 ) {
 
-    val data: LocalDateTime = LocalDateTime.now()
+    private val data: LocalDateTime = LocalDateTime.now()
 
     override fun equals(other: Any?): Boolean {
         return (other as? Matricula)?.let {
