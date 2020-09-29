@@ -35,6 +35,8 @@ fun main() {
     manager.excluirCurso(4)
     //matriculando um aluno em um curso
     manager.matricularAluno(1, 1)
+    //tentando matricular o mesmo aluno no mesmo curso
+    manager.matricularAluno(1, 1)
     //tentando matricular um aluno em um curso que não tem mais vagas
     manager.matricularAluno(2, 1)
     //tentando excluir um curso com alunos matriculados

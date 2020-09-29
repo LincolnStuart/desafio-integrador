@@ -174,11 +174,7 @@ class DigitalHouseManager {
         try {
             val aluno = recuperarAluno(codigoAluno)
             val curso = recuperarCurso(codigoCurso)
-            if (verificarAlunoMatriculadoNoCurso(curso, aluno)) return
-            if (!curso.adicionarUmAluno(aluno)) {
-                println("Matrícula não realizada: O curso não tem mais vagas :/")
-                return
-            }
+            if (!adicionarUmAlunoEmUmCurso(curso, aluno)) return
             val matricula = Matricula(aluno, curso)
             matriculas.add(matricula)
             println("Matrícula do Aluno $codigoAluno no curso $codigoCurso cadastrada com sucesso!")
@@ -235,23 +231,28 @@ class DigitalHouseManager {
     }
 
     /**
-     * método privado que auxilia na verificação da situação de um aluno se ele já está matriculado em um curso.
+     * método privado que auxilia na verificação da situação de um aluno se ele já está matriculado em um curso e o adiciona no curso.
      *
      * @param curso
      * @param aluno
      * @author Lincoln Stuart
      * @since 25/09/2020
      */
-    private fun verificarAlunoMatriculadoNoCurso(
+    private fun adicionarUmAlunoEmUmCurso(
         curso: Curso,
         aluno: Aluno
     ): Boolean {
         if (curso.verificarAlunoPertenceAoCurso(aluno)) {
-            println("O aluno ${aluno.codigo} já está matriculado no ${curso.codigo} :/")
-            return true
+            println("Matrícula não realizada: O aluno ${aluno.codigo} já está matriculado no curso ${curso.codigo} :/")
+            return false
         }
-        return false
+        if (!curso.adicionarUmAluno(aluno)) {
+            println("Matrícula não realizada: O curso não tem mais vagas :/")
+            return false
+        }
+        return true
     }
+
 
     /**
      * método que desmatricula um aluno de um curso.
