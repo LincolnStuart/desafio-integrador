@@ -174,11 +174,15 @@ class DigitalHouseManager {
         try {
             val aluno = recuperarAluno(codigoAluno)
             val curso = recuperarCurso(codigoCurso)
-            if (!adicionarUmAlunoEmUmCurso(curso, aluno)) return
+            adicionarUmAlunoEmUmCurso(curso, aluno)
             val matricula = Matricula(aluno, curso)
             matriculas.add(matricula)
             println("Matrícula do Aluno $codigoAluno no curso $codigoCurso cadastrada com sucesso!")
         } catch (exception: DadoNaoEncontradoException) {
+            println(exception.message)
+        } catch (exception: AlunoMatriculadoNoCursoAnteriormenteException) {
+            println(exception.message)
+        } catch (exception: VagasExcedidasParaUmCursoException) {
             println(exception.message)
         }
     }
@@ -241,16 +245,13 @@ class DigitalHouseManager {
     private fun adicionarUmAlunoEmUmCurso(
         curso: Curso,
         aluno: Aluno
-    ): Boolean {
+    ) {
         if (curso.verificarAlunoPertenceAoCurso(aluno)) {
-            println("Matrícula não realizada: O aluno ${aluno.codigo} já está matriculado no curso ${curso.codigo} :/")
-            return false
+            throw AlunoMatriculadoNoCursoAnteriormenteException("Matrícula não realizada: O aluno ${aluno.codigo} já está matriculado no curso ${curso.codigo} :/")
         }
         if (!curso.adicionarUmAluno(aluno)) {
-            println("Matrícula não realizada: O curso não tem mais vagas :/")
-            return false
+            throw VagasExcedidasParaUmCursoException("Matrícula não realizada: O curso não tem mais vagas :/")
         }
-        return true
     }
 
 
